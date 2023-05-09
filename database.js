@@ -23,10 +23,8 @@ export async function getUserByID(id) {
   // SELECT * FROM todos WHERE user_id=2 and date(?)=date(daytime)
 export async function getUserByEmail(email) {
     const [rows] = await pool.query(`SELECT * FROM user WHERE email = ?`, [email]);
-
     return rows[0];
-  }
-
+}
   export async function getTodosByID(id) {
     const [rows] = await pool.query(
       `
@@ -50,6 +48,22 @@ export async function getTodo(id) {
   export async function getTodos() {
     const [rows] = await pool.query("SELECT * FROM todos");
     return rows;
+  }
+  export async function getUsers() {
+    const [rows] = await pool.query("SELECT * FROM user");
+    return rows;
+  }
+
+  export async function createUser(name,email) {
+    const [result] = await pool.query(
+      `
+      INSERT INTO user (name, email)
+      VALUES (?, ?)
+    `,
+      [name, email]
+    );
+    const userID = result.insertId;
+    return getUserByID(userID);
   }
   export async function createTodo(user_id, title) {
     const [result] = await pool.query(
