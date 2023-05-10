@@ -107,10 +107,19 @@ VALUES
       day,
       user_id,
       day,
+      user_id,
+      day,
+      user_id,
+      day,
+      user_id,
+      day,
+      user_id,
+      day,
     ]
     );
     const todoID = result.insertId;
     return getTodo(todoID);
+    // return result;
   } catch (error) {
     console.error(error);
     throw new Error("Error creating 8m");
