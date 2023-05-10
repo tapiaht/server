@@ -54,8 +54,13 @@ app.get("/todos/shared_todos/:id", async (req, res) => {
     res.status(200).send({ author, shared_with });
   });
   app.get("/users", async (req, res) => {
-    const user = await getUsers();
-    res.status(200).send(user);
+    try {
+    const users = await getUsers();
+    res.status(200).send(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: 'No se pudo obtener la información de los usuarios' });
+  }
   });
   app.get("/users/:id", async (req, res) => {
     const user = await getUserByID(req.params.id);
@@ -72,8 +77,10 @@ app.get("/todos/shared_todos/:id", async (req, res) => {
   });
   app.get("/user/:email", async (req, res) => {
     const user = await getUserByEmail(req.params.email);
-    res.status(200).send(user);
-    // res.send('Hello ' + req.params.email + '!');
+  if (!user) {
+    return res.status(404).send({ message: "User not found" });
+  }
+  res.status(200).send(user);
   });
   app.put("/todos/:id", async (req, res) => {
     const { value } = req.body;
