@@ -72,9 +72,15 @@ app.get("/todos/shared_todos/:id", async (req, res) => {
     
     res.status(200).send(todos);
   });
+
   app.get("/todos/:userId/:daytime", async (req, res) => {
-    const todo = await getTodosByUserIdDate(req.params.userId,req.params.daytime);
-    res.status(200).send(todo);
+    try {
+      const todo = await getTodosByUserIdDate(req.params.userId, req.params.daytime);
+      res.status(200).send(todo);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error al obtener los todos");
+    }
   });
   app.get("/user/:email", async (req, res) => {
     const user = await getUserByEmail(req.params.email);
