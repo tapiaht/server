@@ -77,6 +77,46 @@ export async function getTodo(id) {
     return getTodo(todoID);
   }
 
+  export async function create8m(user_id, day) {
+    try {
+    const [result] = await pool.query(
+      `
+      INSERT INTO todos (title, user_id,inday,intime) 
+VALUES 
+("🏃‍Ejercicio 1er",?,?,"07:30:00"),
+("💧Agua 1er Vaso",?,?,"07:30:00"),
+("💧Agua 2do Vaso",?,?,"08:00:00"),
+("🍏Nutricion Desayuno",?,?,"08:00:00"),
+("💧Agua 3er Vaso",?,?,"11:30:00"),
+("🍲Nutricion Almuerzo",?,?,"12:00:00"),
+("‍🏃‍Ejercicio 2do",?,?,"19:00:00"),
+("💧Agua 4to Vaso",?,?,"19:30:00"),
+("🍲Nutricion Cena",?,?,"20:00:00"),
+("🛌Descanso",?,?,"22:00:00");
+    `,
+    [
+      user_id,
+      day,
+      user_id,
+      day,
+      user_id,
+      day,
+      user_id,
+      day,
+      user_id,
+      day,
+      user_id,
+      day,
+    ]
+    );
+    const todoID = result.insertId;
+    return getTodo(todoID);
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error creating 8m");
+  }
+  }
+
   export async function deleteTodo(id) {
     const [result] = await pool.query(
       `

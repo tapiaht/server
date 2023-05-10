@@ -10,6 +10,7 @@ import {
     toggleCompleted,
     getUserByEmail,
     getUserByID,
+    create8m,
     getTodosByUserIdDate,
     getSharedTodoByID,
 } from "./database.js";
@@ -104,6 +105,16 @@ app.get("/todos/shared_todos/:id", async (req, res) => {
     const { user_id, title } = req.body;
     const todo = await createTodo(user_id, title);
     res.status(201).send(todo);
+  });
+  app.post("/create8m", async (req, res) => {
+    const { user_id, day } = req.body;
+    try {
+      const todo = await create8m(user_id, day);
+      res.status(201).send(todo);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: "Error creating 8map" });
+    }
   });
   app.post("/users", async (req, res) => {
     const { name, email } = req.body;
