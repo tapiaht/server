@@ -1,18 +1,20 @@
 import express from  'express';
 import {
-    getTodos,
-    getUsers,
+  createUser,
+  getUsers,
+  getUserByID,
+  getUserByEmail,
+  createTodo,
+  getTodos,
+  getTodosById,
+  deleteTodo,
+  createChallenge,
+  getChallenge,
+  getChallengeByID,
+  getChallengeByUserId,
+  getChallengeByUserIdDate,
+  toggleCompleted,
     shareTodo,
-    deleteTodo,
-    getTodosById,
-    createTodo,
-    createUser,
-    toggleCompleted,
-    getUserByEmail,
-    getUserByID,
-    create8m,
-    getTodosByUserIdDate,
-    getTodosByUserId,
     getSharedTodoByID,
 } from "./database.js";
 import bodyParser from "body-parser";
@@ -43,22 +45,28 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(cors(corsOptions));
 // app.use(ckeckApiKey);
-
-app.get("/todos/:id",async (req,res)=>{
-  
+//TODO
+  app.get("/todos",async (req,res)=>{
+  const todos=await getTodos();
+  res.status(200).send(todos);
+  });
+  app.get("/todos/:id",async (req,res)=>{
     const todos=await getTodosById(req.params.id);
     if (!todos) {
       return res.status(404).send({ message: "TOdo not found" });
     }
     res.status(200).send(todos);
-})
-
-app.get("/todos/shared_todos/:id", async (req, res) => {
-    const todo = await getSharedTodoByID(req.params.id);
-    const author = await getUserByID(todo.user_id);
-    const shared_with = await getUserByID(todo.shared_with_id);
-    res.status(200).send({ author, shared_with });
+  })
+  app.delete("/todos/:id", async (req, res) => {
+    await deleteTodo(req.params.id);
+    res.send({ message: "Todo deleted successfully" });
   });
+  app.post("/todos", async (req, res) => {
+    const { title,type,advice,intime } = req.body;
+    const todo = await createTodo(title,type,advice,intime);
+    res.status(201).send(todo);
+  });
+//USERS
   app.get("/users", async (req, res) => {
     try {
     const users = await getUsers();
@@ -68,32 +76,14 @@ app.get("/todos/shared_todos/:id", async (req, res) => {
     res.status(500).send({ error: 'No se pudo obtener la información de los usuarios' });
   }
   });
+  app.post("/users", async (req, res) => {
+    const { name, email } = req.body;
+    const user = await createUser(name, email);
+    res.status(201).send(user);
+  });
   app.get("/users/:id", async (req, res) => {
     const user = await getUserByID(req.params.id);
     res.status(200).send(user);
-  });
-  app.get("/todos/",async (req,res)=>{
-    const todos=await getTodos();
-    res.status(200).send(todos);
-  });
-
-  app.get("/todos/:userId/:daytime", async (req, res) => {
-    try {
-      const todo = await getTodosByUserIdDate(req.params.userId, req.params.daytime);
-      res.status(200).send(todo);
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Error al obtener los todos");
-    }
-  });
-  app.get("/todosuser/:user_id", async (req, res) => {
-    try {
-      const todo = await getTodosByUserId(req.params.user_id);
-      res.status(200).send(todo);
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Error al obtener las tareas del usuario");
-    }
   });
   app.get("/user/:email", async (req, res) => {
     const user = await getUserByEmail(req.params.email);
@@ -102,17 +92,60 @@ app.get("/todos/shared_todos/:id", async (req, res) => {
   }
   res.status(200).send(user);
   });
-  app.put("/todos/:id", async (req, res) => {
+  
+//CHALLENGE
+  app.post("/challenge", async (req, res) => {
+  const { todo_id, user_id, inday } = req.body;
+  try {
+    const todo = await createChallenge(todo_id,user_id, inday);
+    res.status(201).send(todo);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Error creating challenge" });
+  }
+  });
+  app.get("/challenge", async (req, res) => {
+    try {
+      const todo = await getChallenge();
+      res.status(200).send(todo);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error al obtener todos los retos ");
+    }
+  });
+  app.get("/challenge/:id", async (req, res) => {
+    try {
+      const todo = await getChallengeByID(req.params.id);
+      res.status(200).send(todo);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error al obtener todos los retos ");
+    }
+  });
+  app.get("/challengeuser/:user_id", async (req, res) => {
+    try {
+      const todo = await getChallengeByUserId(req.params.user_id);
+      res.status(200).send(todo);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error al obtener los retos del usuario");
+    }
+  });
+  app.get("/challenge/:userId/:daytime", async (req, res) => {
+    try {
+      const todo = await getChallengeByUserIdDate(req.params.userId, req.params.daytime);
+      res.status(200).send(todo);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error al obtener los todos");
+    }
+  }); 
+  app.put("/challenge/:id", async (req, res) => {
     const { value } = req.body;
     const todo = await toggleCompleted(req.params.id, value);
     res.status(200).send(todo);
   });
-  
-  app.delete("/todos/:id", async (req, res) => {
-    await deleteTodo(req.params.id);
-    res.send({ message: "Todo deleted successfully" });
-  });
-  
+//SHARE 
   app.post("/todos/shared_todos", async (req, res) => {
     const { todo_id, user_id, email } = req.body;
     // const { todo_id, user_id, shared_with_id } = req.body;
@@ -120,25 +153,13 @@ app.get("/todos/shared_todos/:id", async (req, res) => {
     const sharedTodo = await shareTodo(todo_id, user_id, userToShare.id);
     res.status(201).send(sharedTodo);
   });
-  app.post("/todos", async (req, res) => {
-    const { user_id, title } = req.body;
-    const todo = await createTodo(user_id, title);
-    res.status(201).send(todo);
-  });
-  app.post("/create8m", async (req, res) => {
-    const { user_id, day } = req.body;
-    try {
-      const todo = await create8m(user_id, day);
-      res.status(201).send(todo);
-    } catch (error) {
-      console.error(error);
-      res.status(500).send({ message: "Error creating 8map" });
-    }
-  });
-  app.post("/users", async (req, res) => {
-    const { name, email } = req.body;
-    const user = await createUser(name, email);
-    res.status(201).send(user);
+ 
+  
+  app.get("/todos/shared_todos/:id", async (req, res) => {
+    const todo = await getSharedTodoByID(req.params.id);
+    const author = await getUserByID(todo.user_id);
+    const shared_with = await getUserByID(todo.shared_with_id);
+    res.status(200).send({ author, shared_with });
   });
 
 
