@@ -40,9 +40,28 @@ export async function createUser(name,email) {
   export async function getTodosById(id){
     const [row]= await pool.query(`SELECT * FROM todos WHERE id=?`, [id]);
     return row[0];
-}
+  }
+  export async function getTodosById8(id) {
+    const [rows] = await pool.query(
+    `
+    SELECT t.id, t.title, t1.name, t.advice, t.intime, t.picture
+    FROM todo8m.todos t 
+      INNER JOIN todo8m.t8m t1 ON ( t1.id = t.type )
+      WHERE t.id = ?
+    `, [id]);
+    return rows[0];
+  }
   export async function getTodos() {
     const [rows] = await pool.query("SELECT * FROM todos");
+    return rows;
+  }
+  export async function getTodos8() {
+    const [rows] = await pool.query(
+    `
+    SELECT t.id, t.title, t1.name, t.advice, t.intime, t.picture
+    FROM todo8m.todos t 
+      INNER JOIN todo8m.t8m t1 ON ( t1.id = t.type )
+    `);
     return rows;
   }
   export async function createTodo( title, type, advice, intime) {

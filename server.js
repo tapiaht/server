@@ -6,7 +6,9 @@ import {
   getUserByEmail,
   createTodo,
   getTodos,
+  getTodos8,
   getTodosById,
+  getTodosById8,
   deleteTodo,
   createChallenge,
   getChallenge,
@@ -47,11 +49,11 @@ app.use(cors(corsOptions));
 // app.use(ckeckApiKey);
 //TODO
   app.get("/todos",async (req,res)=>{
-  const todos=await getTodos();
+  const todos=await getTodos8();
   res.status(200).send(todos);
   });
   app.get("/todos/:id",async (req,res)=>{
-    const todos=await getTodosById(req.params.id);
+    const todos=await getTodosById8(req.params.id);
     if (!todos) {
       return res.status(404).send({ message: "TOdo not found" });
     }
@@ -161,8 +163,6 @@ app.use(cors(corsOptions));
     const shared_with = await getUserByID(todo.shared_with_id);
     res.status(200).send({ author, shared_with });
   });
-
-
 app.get('/', (req, res) => {
   res.send('Hello from App Engine!');
 });
