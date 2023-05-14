@@ -103,11 +103,24 @@ VALUES (?,?,?);
 }
 }
 export async function getChallenge() {
-  const [rows] = await pool.query(`SELECT * FROM challenge`);
+  const [rows] = await pool.query(`
+  SELECT c.id, t.title,  t1.name, c.completed, u.name, c.inday, t.intime
+FROM todo8m.challenge c 
+	INNER JOIN todo8m.todos t ON ( t.id = c.todo_id  )  
+	INNER JOIN todo8m.t8m t1 ON ( t1.id = t.type  )  
+	INNER JOIN todo8m.user u ON ( u.id = c.user_id  )
+  `);
   return rows;
 }
 export async function getChallengeByID(id) {
-  const [rows] = await pool.query(`SELECT * FROM challenge WHERE id = ?`,[id]);
+  const [rows] = await pool.query(`
+  SELECT c.id, t.title,  t1.name, c.completed, u.name, c.inday, t.intime
+FROM todo8m.challenge c 
+	INNER JOIN todo8m.todos t ON ( t.id = c.todo_id  )  
+	INNER JOIN todo8m.t8m t1 ON ( t1.id = t.type  )  
+	INNER JOIN todo8m.user u ON ( u.id = c.user_id  )
+WHERE u.id =?
+  `,[id]);
   return rows[0];
 }
 export async function getChallengeByUserId(user_id) {
