@@ -24,6 +24,7 @@ import cors from "cors";
 
 const corsOptions = {
     // origin: "http://127.0.0.1:5173", // specify the allowed origin
+    // origin: "https://apiexpress-hu67.onrender.com:5173", // specify the allowed origin
     origin: "https://apiexpress-hu67.onrender.com:5173", // specify the allowed origin
     methods: ["POST", "GET"], // specify the allowed methods
     credentials: true, // allow sending credentials (cookies, authentication)
