@@ -145,6 +145,14 @@ WHERE c.user_id =? AND DATE(c.inday) = ?
   `,[userId,daytime]);
   return rows;
 }
+export async function getChallengeByIdUserIdtodo(user_id,todo_id) {
+  const [rows] = await pool.query(`
+  SELECT * FROM challenge where user_id=? and todo_id=?
+  `,[user_id,todo_id]);
+  return rows[0];
+}
+
+
   export async function toggleCompleted(id, value) {
     const newValue = value === true ? "TRUE" : "FALSE";
     const [result] = await pool.query(

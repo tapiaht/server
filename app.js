@@ -15,6 +15,7 @@ import {
   getChallengeByID,
   getChallengeByUserId,
   getChallengeByUserIdDate,
+  getChallengeByIdUserIdtodo,
   toggleCompleted,
     shareTodo,
     getSharedTodoByID,
@@ -143,6 +144,18 @@ app.use(cors(corsOptions));
       res.status(500).send("Error al obtener los todos");
     }
   }); 
+  app.get("/challengeuser/:userId/:todoId", async (req, res) => {
+    try {
+      const todo = await getChallengeByIdUserIdtodo(req.params.userId, req.params.todoId);
+      if (!todo) {
+        return res.status(404).send({ message: "Nofound" });
+      }
+      res.status(200).send(todo);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error al obtener los todos");
+    }
+  });
   app.put("/challenge/:id", async (req, res) => {
     const { value } = req.body;
     const todo = await toggleCompleted(req.params.id, value);
