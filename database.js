@@ -125,7 +125,7 @@ WHERE c.id =?
 }
 export async function getChallengeByUserId(user_id) {
 const [rows] = await pool.query(`
-SELECT c.id, t.title,  t1.name as type, c.completed, u.name as user, c.inday, t.intime
+SELECT c.id, t.title,  t1.name as type, c.completed, u.name as user, c.inday, t.intime, t.picture
 FROM todo8m.challenge c 
 	INNER JOIN todo8m.todos t ON ( t.id = c.todo_id  )  
 	INNER JOIN todo8m.t8m t1 ON ( t1.id = t.type  )  
