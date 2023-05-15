@@ -15,16 +15,19 @@ import {
   getChallengeByID,
   getChallengeByUserId,
   getChallengeByUserIdDate,
+  getChallengeByIdUserIdtodo,
   toggleCompleted,
     shareTodo,
     getSharedTodoByID,
+    deleteChallenge,
 } from "./database.js";
 import bodyParser from "body-parser";
 import cors from "cors";
 
 const corsOptions = {
     // origin: "http://127.0.0.1:5173", // specify the allowed origin
-    origin: "https://apiexpress-hu67.onrender.com:5173", // specify the allowed origin
+    // origin: "https://apiexpress-hu67.onrender.com:5173", // specify the allowed origin
+    origin: "https://planar-ray-386522.rj.r.appspot.com:5173", // specify the allowed origin
     methods: ["POST", "GET"], // specify the allowed methods
     credentials: true, // allow sending credentials (cookies, authentication)
   };
@@ -142,10 +145,26 @@ app.use(cors(corsOptions));
       res.status(500).send("Error al obtener los todos");
     }
   }); 
+  app.get("/challengeuser/:userId/:todoId", async (req, res) => {
+    try {
+      const todo = await getChallengeByIdUserIdtodo(req.params.userId, req.params.todoId);
+      if (!todo) {
+        return res.status(404).send({ message: "Nofound" });
+      }
+      res.status(200).send(todo);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error al obtener los todos");
+    }
+  });
   app.put("/challenge/:id", async (req, res) => {
     const { value } = req.body;
     const todo = await toggleCompleted(req.params.id, value);
     res.status(200).send(todo);
+  });
+  app.delete("/challenge/:id", async (req, res) => {
+    await deleteChallenge(req.params.id);
+    res.send({ message: "Challenge deleted successfully" });
   });
 //SHARE 
   app.post("/todos/shared_todos", async (req, res) => {
@@ -163,6 +182,7 @@ app.use(cors(corsOptions));
     const shared_with = await getUserByID(todo.shared_with_id);
     res.status(200).send({ author, shared_with });
   });
+
 app.get('/', (req, res) => {
   res.send('Hello from App Engine!');
 });

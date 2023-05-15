@@ -152,6 +152,15 @@ export async function getChallengeByIdUserIdtodo(user_id,todo_id) {
   return rows[0];
 }
 
+export async function deleteChallenge(id) {
+  const [result] = await pool.query(
+    `
+    DELETE FROM challenge WHERE id = ?;
+    `,
+    [id]
+  );
+  return result;
+}
 
   export async function toggleCompleted(id, value) {
     const newValue = value === true ? "TRUE" : "FALSE";

@@ -19,6 +19,7 @@ import {
   toggleCompleted,
     shareTodo,
     getSharedTodoByID,
+    deleteChallenge,
 } from "./database.js";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -160,6 +161,10 @@ app.use(cors(corsOptions));
     const { value } = req.body;
     const todo = await toggleCompleted(req.params.id, value);
     res.status(200).send(todo);
+  });
+  app.delete("/challenge/:id", async (req, res) => {
+    await deleteChallenge(req.params.id);
+    res.send({ message: "Challenge deleted successfully" });
   });
 //SHARE 
   app.post("/todos/shared_todos", async (req, res) => {
