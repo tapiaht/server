@@ -44,7 +44,7 @@ export async function createUser(name,email) {
   export async function getTodosById8(id) {
     const [rows] = await pool.query(
     `
-    SELECT t.id, t.title, t1.name, t.advice, t.intime, t.picture
+    SELECT t.id, t.title, t1.name, t.advice, t.picture
     FROM todo8m.todos t 
       INNER JOIN todo8m.t8m t1 ON ( t1.id = t.type )
       WHERE t.id = ?
@@ -58,19 +58,19 @@ export async function createUser(name,email) {
   export async function getTodos8() {
     const [rows] = await pool.query(
     `
-    SELECT t.id, t.title, t1.name, t.advice, t.intime, t.picture
+    SELECT t.id, t.title, t1.name, t.advice,  t.picture
     FROM todo8m.todos t 
       INNER JOIN todo8m.t8m t1 ON ( t1.id = t.type )
     `);
     return rows;
   }
-  export async function createTodo( title, type, advice, intime) {
+  export async function createTodo( title, type, advice) {
     const [result] = await pool.query(
       `
-      INSERT INTO todos (title, type, advice, intime)
+      INSERT INTO todos (title, type, advice)
       VALUES (?, ?, ?, ?)
     `,
-      [title, type, advice, intime]
+      [title, type, advice]
     );
     const todoID = result.insertId;
     return getTodosById(todoID);
@@ -90,10 +90,10 @@ export async function createChallenge(todo_id, user_id, inday) {
   try {
   const [result] = await pool.query(
     `
-INSERT INTO challenge (todo_id, user_id, inday) 
-VALUES (?,?,?);
+INSERT INTO challenge (todo_id, user_id, inday, intime) 
+VALUES (?,?,?,?);
   `,
-  [ todo_id, user_id, inday]
+  [ todo_id, user_id, inday, intime]
   );
   const challengeID = result.insertId;
   return getChallengeByID(challengeID);
@@ -104,7 +104,7 @@ VALUES (?,?,?);
 }
 export async function getChallenge() {
   const [rows] = await pool.query(`
-  SELECT c.id, t.title,  t1.name, c.completed, u.name, c.inday, t.intime
+  SELECT c.id, t.title,  t1.name, c.completed, u.name, c.inday, c.intime
 FROM todo8m.challenge c 
 	INNER JOIN todo8m.todos t ON ( t.id = c.todo_id  )  
 	INNER JOIN todo8m.t8m t1 ON ( t1.id = t.type  )  
@@ -114,7 +114,7 @@ FROM todo8m.challenge c
 }
 export async function getChallengeByID(id) {
   const [rows] = await pool.query(`
-  SELECT c.id, t.title,  t1.name as user, c.completed, u.name, c.inday, t.intime
+  SELECT c.id, t.title,  t1.name as user, c.completed, u.name, c.inday, c.intime
 FROM todo8m.challenge c 
 	INNER JOIN todo8m.todos t ON ( t.id = c.todo_id  )  
 	INNER JOIN todo8m.t8m t1 ON ( t1.id = t.type  )  
@@ -125,7 +125,7 @@ WHERE c.id =?
 }
 export async function getChallengeByUserId(user_id) {
 const [rows] = await pool.query(`
-SELECT c.id, t.title,  t1.name as type, c.completed, u.name as user, c.inday, t.intime, t.picture, c.todo_id
+SELECT c.id, t.title,  t1.name as type, c.completed, u.name as user, c.inday, c.intime, t.picture, c.todo_id
 FROM todo8m.challenge c 
 	INNER JOIN todo8m.todos t ON ( t.id = c.todo_id  )  
 	INNER JOIN todo8m.t8m t1 ON ( t1.id = t.type  )  
@@ -136,7 +136,7 @@ return rows;
 }
 export async function getChallengeByUserIdDate(userId,daytime) {
   const [rows] = await pool.query(`
-  SELECT c.id, t.title,  t1.name, c.completed, u.name, c.inday, t.intime
+  SELECT c.id, t.title,  t1.name, c.completed, u.name, c.inday, c.intime
 FROM todo8m.challenge c 
 	INNER JOIN todo8m.todos t ON ( t.id = c.todo_id  )  
 	INNER JOIN todo8m.t8m t1 ON ( t1.id = t.type  )  

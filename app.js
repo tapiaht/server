@@ -100,9 +100,9 @@ app.use(cors(corsOptions));
   
 //CHALLENGE
   app.post("/challenge", async (req, res) => {
-  const { todo_id, user_id, inday } = req.body;
+  const { todo_id, user_id, inday,intime } = req.body;
   try {
-    const todo = await createChallenge(todo_id,user_id, inday);
+    const todo = await createChallenge(todo_id,user_id, inday, intime);
     res.status(201).send(todo);
   } catch (error) {
     console.error(error);
