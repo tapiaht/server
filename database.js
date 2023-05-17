@@ -86,7 +86,7 @@ export async function createUser(name,email) {
   }
 
 //CHALLENGE CRUD
-export async function createChallenge(todo_id, user_id, inday) {
+export async function createChallenge(todo_id, user_id, inday, intime) {
   try {
   const [result] = await pool.query(
     `
@@ -168,6 +168,18 @@ export async function deleteChallenge(id) {
       `
       UPDATE challenge
       SET completed = ${newValue} 
+      WHERE id = ?;
+      `,
+      [id]
+    );
+    return result;
+  }
+
+  export async function challengeTime(id, value) {
+    const [result] = await pool.query(
+      `
+      UPDATE challenge
+      SET intime = ${value} 
       WHERE id = ?;
       `,
       [id]

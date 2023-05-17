@@ -17,6 +17,7 @@ import {
   getChallengeByUserIdDate,
   getChallengeByIdUserIdtodo,
   toggleCompleted,
+  challengeTime,
     shareTodo,
     getSharedTodoByID,
     deleteChallenge,
@@ -100,9 +101,9 @@ app.use(cors(corsOptions));
   
 //CHALLENGE
   app.post("/challenge", async (req, res) => {
-  const { todo_id, user_id, inday } = req.body;
+  const { todo_id, user_id, inday, intime } = req.body;
   try {
-    const todo = await createChallenge(todo_id,user_id, inday);
+    const todo = await createChallenge(todo_id,user_id, inday, intime);
     res.status(201).send(todo);
   } catch (error) {
     console.error(error);
@@ -160,6 +161,11 @@ app.use(cors(corsOptions));
   app.put("/challenge/:id", async (req, res) => {
     const { value } = req.body;
     const todo = await toggleCompleted(req.params.id, value);
+    res.status(200).send(todo);
+  });
+  app.put("/challengetime/:id", async (req, res) => {
+    const { value } = req.body;
+    const todo = await challengeTime(req.params.id, value);
     res.status(200).send(todo);
   });
   app.delete("/challenge/:id", async (req, res) => {
