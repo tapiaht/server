@@ -164,8 +164,8 @@ app.use(cors(corsOptions));
     res.status(200).send(todo);
   });
   app.put("/challengetime/:id", async (req, res) => {
-    const { value } = req.body;
-    const todo = await challengeTime(req.params.id, value);
+    const { intime } = req.body;
+    const todo = await challengeTime(req.params.id, intime);
     res.status(200).send(todo);
   });
   app.delete("/challenge/:id", async (req, res) => {

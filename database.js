@@ -175,11 +175,11 @@ export async function deleteChallenge(id) {
     return result;
   }
 
-  export async function challengeTime(id, value) {
+  export async function challengeTime(id, intime) {
     const [result] = await pool.query(
       `
       UPDATE challenge
-      SET intime = ${value} 
+      SET intime = '${intime}' 
       WHERE id = ?;
       `,
       [id]
