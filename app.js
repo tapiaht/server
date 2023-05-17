@@ -83,8 +83,8 @@ app.use(cors(corsOptions));
   }
   });
   app.post("/users", async (req, res) => {
-    const { name, email } = req.body;
-    const user = await createUser(name, email);
+    const { name, email, picture } = req.body;
+    const user = await createUser(name, email, picture);
     res.status(201).send(user);
   });
   app.get("/users/:id", async (req, res) => {

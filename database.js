@@ -24,13 +24,13 @@ export async function getUserByEmail(email) {
     return rows[0];
 }
 
-export async function createUser(name,email) {
+export async function createUser(name,email,picture) {
   const [result] = await pool.query(
     `
-    INSERT INTO user (name, email)
-    VALUES (?, ?)
+    INSERT INTO user (name, email,picture)
+    VALUES (?, ?, ?)
   `,
-    [name, email]
+    [name, email,picture]
   );
   const userID = result.insertId;
   return getUserByID(userID);
