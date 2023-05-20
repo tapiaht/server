@@ -83,8 +83,8 @@ app.use(cors(corsOptions));
   }
   });
   app.post("/users", async (req, res) => {
-    const { name, email } = req.body;
-    const user = await createUser(name, email);
+    const { name, email, picture } = req.body;
+    const user = await createUser(name, email, picture);
     res.status(201).send(user);
   });
   app.get("/users/:id", async (req, res) => {
@@ -164,8 +164,8 @@ app.use(cors(corsOptions));
     res.status(200).send(todo);
   });
   app.put("/challengetime/:id", async (req, res) => {
-    const { value } = req.body;
-    const todo = await challengeTime(req.params.id, value);
+    const { intime } = req.body;
+    const todo = await challengeTime(req.params.id, intime);
     res.status(200).send(todo);
   });
   app.delete("/challenge/:id", async (req, res) => {
@@ -188,6 +188,7 @@ app.use(cors(corsOptions));
     const shared_with = await getUserByID(todo.shared_with_id);
     res.status(200).send({ author, shared_with });
   });
+
 
 app.get('/', (req, res) => {
   res.send('Hello from App Engine!');

@@ -67,7 +67,7 @@ app.use(cors(corsOptions));
     await deleteTodo(req.params.id);
     res.send({ message: "Todo deleted successfully" });
   });
-  app.post("/todos", async (req, res) => {
+  app.post("/todo", async (req, res) => {
     const { title,type,advice,intime } = req.body;
     const todo = await createTodo(title,type,advice,intime);
     res.status(201).send(todo);
