@@ -64,13 +64,13 @@ export async function createUser(name,email,picture) {
     `);
     return rows;
   }
-  export async function createTodo( title, type, advice) {
+  export async function createTodo( title, type, advice, picture) {
     const [result] = await pool.query(
       `
-      INSERT INTO todos (title, type, advice)
+      INSERT INTO todos (title, type, advice, picture)
       VALUES (?, ?, ?, ?)
     `,
-      [title, type, advice]
+      [title, type, advice, picture]
     );
     const todoID = result.insertId;
     return getTodosById(todoID);
