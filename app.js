@@ -26,9 +26,9 @@ import bodyParser from "body-parser";
 import cors from "cors";
 
 const corsOptions = {
-    // origin: "http://127.0.0.1:5173", // specify the allowed origin
+    origin: "http://127.0.0.1:5173", // specify the allowed origin
     // origin: "https://apiexpress-hu67.onrender.com:5173", // specify the allowed origin
-    origin: "https://planar-ray-386522.rj.r.appspot.com:5173", // specify the allowed origin
+    //origin: "https://planar-ray-386522.rj.r.appspot.com:5173", // specify the allowed origin
     methods: ["POST", "GET"], // specify the allowed methods
     credentials: true, // allow sending credentials (cookies, authentication)
   };
@@ -68,8 +68,8 @@ app.use(cors(corsOptions));
     res.send({ message: "Todo deleted successfully" });
   });
   app.post("/todo", async (req, res) => {
-    const { title,type,advice,intime } = req.body;
-    const todo = await createTodo(title,type,advice,intime);
+    const { title,type,advice,picture } = req.body;
+    const todo = await createTodo(title,type,advice,picture);
     res.status(201).send(todo);
   });
 //USERS
@@ -192,3 +192,5 @@ app.use(cors(corsOptions));
 app.listen(8080,()=>{
     console.log("SErver runnin on por 8080");
 })
+
+export default app;
