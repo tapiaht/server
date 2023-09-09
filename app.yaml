@@ -14,6 +14,12 @@
 # [START app_yaml]
 runtime: nodejs16
 # [END app_yaml]
-
+env: standard
+instance_class: F1
+automatic_scaling:
+  min_idle_instances: automatic
+  max_idle_instances: automatic
+  min_pending_latency: automatic
+  max_pending_latency: automatic
 build_env_variables:
   GOOGLE_NODE_RUN_SCRIPTS: ''
